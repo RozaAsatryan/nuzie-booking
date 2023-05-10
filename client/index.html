@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./public/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nuzie</title>
+    <style>
+      #google_translate_element select {
+        background-color: #f5f5f5;
+        color: #222222;
+        border: none;
+        border-radius: 3px;
+        padding: 10px;
+      }
+      .fixed-con {
+        z-index: 9724790009779558 !important;
+        background-color: #f7f8fc;
+        position: fixed;
+        top: 0;
+        overflow-y: auto;
+      }
+      .goog-te-gadget {
+        color: transparent !important;
+      }
+      .VIpgJd-ZVi9od-l4eHX-hSRGPd {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <div id="google_translate_element"></div> -->
+
+    <div id="root"></div>
+
+    <script type="module" src="/src/main.jsx"></script>
+    <script
+      type="text/javascript"
+      src="https://translate.google.com/translate_a/element.js?
+cb=googleTranslateElementInit"
+    ></script>
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          { pageLanguage: 'en' },
+          'google_translate_element'
+        );
+      }
+    </script>
+  </body>
+</html>

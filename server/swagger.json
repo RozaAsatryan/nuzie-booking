@@ -1,0 +1,518 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "securityDefinitions": {
+      "Bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Enter your Bearer token in the format 'Bearer {token}'"
+      }
+    },
+
+    "title": "Hotel Booking API",
+    "description": "Hotel Booking API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:8000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Hotels"
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+
+  "paths": {
+    "/hotels": {
+      "get": {
+        "tags": ["Hotels"],
+        "summary": "Возвращает все зарегистрированные отели в системе",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Hotels"
+            }
+          }
+        }
+      }
+    },
+    "/create-hotel": {
+      "post": {
+        "tags": ["Hotel"],
+        "summary": "Создает новый отель",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "$ref": "#/definitions/Hotel"
+                }
+              }
+            }
+          }
+        },
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Request Body",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "New hotel is created",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          }
+        }
+      }
+    },
+    "/hotel/:hotelId": {
+      "get": {
+        "tags": ["Hotel"],
+        "summary": "Возвращает отель по соответствующему идентификатору",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          }
+        }
+      }
+    },
+
+    "/update-hotel/:hotelId": {
+      "put": {
+        "tags": ["Hotel"],
+        "summary": "Обновляет отель по соответствующему идентификатору",
+
+        "parameters": [
+          {
+            "name": "hotel",
+            "summary": "Hotel that we want to update",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Hotel has been updated",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          }
+        },
+        "properties": {
+          "title": {
+            "type": "string",
+            "required": "Title is required",
+            "unique": true
+          },
+          "content": {
+            "type": "string",
+            "required": "Content is required",
+            "maxlength": 10000
+          },
+          "location": {
+            "type": "string",
+            "required": true
+          },
+          "price": {
+            "type": "number",
+            "required": "Price is required",
+            "trim": true
+          },
+          "postedBy": {
+            "type": "number",
+            "ref": "User"
+          },
+          "image": {
+            "data": "Buffer",
+            "contentType": "string"
+          },
+          "from": {
+            "format": "date"
+          },
+          "to": {
+            "format": "date"
+          },
+          "bed": {
+            "type": "number"
+          }
+        },
+        "timestamps": true
+      }
+    },
+    "/delete-hotel/:hotelId": {
+      "delete": {
+        "tags": ["Hotel"],
+        "summary": "Удаляет отель по соответствующему идентификатору",
+        "parameters": {
+          "name": "hotel",
+          "summary": "Deletes a hotel",
+          "schema": {
+            "$ref": "#/definitions/Hotel"
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Hotel has been deleted"
+          }
+        }
+      }
+    },
+    "/is-already-booked/:hotelId": {
+      "get": {
+        "tags": ["Order"],
+        "summary": "Проверяет доступность отеля по заданному ID",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Orders"
+            }
+          }
+        }
+      }
+    },
+    "/seller-hotels": {
+      "get": {
+        "tags": ["Hotels"],
+        "summary": "Возвращает отели записанными данным пользователем",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Hotels"
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Создает новый аккаунт",
+        "parameters": [
+          {
+            "name": "user",
+            "summary": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Обеспечивает вход в аккаунт",
+        "parameters": [
+          {
+            "name": "user",
+            "summary": "User that wants to login",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User has logged in",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/create-connect-account": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Подключает платежный аккаунт к уч. записи пользователя",
+        "parameters": [
+          {
+            "name": "user",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User connected their stripe account",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/get-account-status": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Извлекает статус учетной записи",
+        "parameters": {
+          "requestBody": {
+            "required": true,
+            "summary": "User that wants to connect their stripe account",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/get-account-balance": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Получает текущий баланс счета",
+        "parameters": {
+          "requestBody": {
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/stripe-session-id": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Извлекает детали учетной записи по заданному идентификатору",
+        "parameters": {
+          "requestBody": {
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/user-hotel-bookings": {
+      "get": {
+        "tags": ["Orders"],
+        "summary": "Загружает все бронирования отеля данного пользователя",
+        "security": {
+          "- Bearer": []
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Orders"
+            }
+          }
+        }
+      }
+    },
+    "/search-listings": {
+      "post": {
+        "tags": ["Hotels"],
+        "summary": "Возвращает все отели соответствующие по поисковому запросу",
+        "parameters": [
+          {
+            "name": "hotel",
+            "summary": "Hotels matching the search query",
+            "schema": {
+              "$ref": "#/definitions/Hotel"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User has logged in",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/stripe-success": {
+      "post": {
+        "tags": ["Order"],
+        "summary": "Подтверждает успешный заказ",
+        "parameters": {
+          "hotelId": {
+            "required": true,
+            "summary": "User that wants to confirm the order",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "Hotel": {
+      "type": "object",
+      "required": ["title", "content", "location", "price"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "required": [true, "Title is required"],
+          "unique": true
+        },
+        "content": {
+          "type": "string",
+          "required": "Content is required",
+          "maxlength": 10000
+        },
+        "location": {
+          "type": "string",
+          "required": true
+        },
+        "price": {
+          "type": "number",
+          "required": "Price is required",
+          "trim": true
+        },
+        "postedBy": {
+          "type": "number",
+          "ref": "User"
+        },
+        "image": {
+          "data": "Buffer",
+          "contentType": "string"
+        },
+        "from": {
+          "format": "date"
+        },
+        "to": {
+          "format": "date"
+        },
+        "bed": {
+          "type": "number"
+        }
+      },
+      "timestamps": true
+    },
+    "Hotels": {
+      "type": "array",
+      "$ref": "#/definitions/Hotel"
+    },
+    "User": {
+      "required": ["name", "email", "password"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "trim": true,
+          "required": [true, "Name is required"]
+        },
+        "email": {
+          "type": "string",
+          "trim": true,
+          "required": "Email is required",
+          "unique": true
+        },
+        "password": {
+          "type": "string",
+          "required": true,
+          "minLength": 6,
+          "maxLength": 64
+        },
+        "stripe_account_id": {
+          "type": "string"
+        },
+        "stripe_seller": {
+          "type": "object"
+        },
+        "stripeSession": {
+          "type": "object"
+        }
+      }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
+    },
+    "Order": {
+      "required": ["orderedBy"],
+      "properties": {
+        "hotelId": {
+          "type": "number",
+          "ref": "Hotel"
+        },
+        "session": {
+          "type": "object"
+        },
+        "orderedBy": { "type": "number", "ref": "User" }
+      }
+    },
+    "Orders": {
+      "type": "array",
+      "$ref": "#/definitions/Order"
+    }
+  }
+}
+
+
+
